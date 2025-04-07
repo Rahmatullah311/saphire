@@ -1,12 +1,13 @@
+import React from "react";
 import MUIAuthAppProvider from "../../providers/MUIAuthAppProvider";
 import MUILogin from "./pages/MUILogin";
 import { ToastContainer } from "react-toastify";
 const AuthRouteProviders = () => {
   return (
-    <>
+    <React.Fragment>
       <MUIAuthAppProvider />
       <ToastContainer />
-    </>
+    </React.Fragment>
   );
 };
 export const AuthRoutes = [

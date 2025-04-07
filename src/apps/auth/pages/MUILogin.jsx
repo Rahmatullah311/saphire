@@ -6,6 +6,7 @@ import { requestLogin } from "../authSlice";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import { isTokenExpired } from "../../../utils/customTokenValidator";
+import { useMemo, useState } from "react";
 
 // preview-start
 const providers = [{ id: "credentials", name: "Email and Password" }];
@@ -20,35 +21,44 @@ const providers = [{ id: "credentials", name: "Email and Password" }];
 
 export default function MUILogin() {
   const theme = useTheme();
-  const accessToken = useSelector((state) => state.auth.accessToken)
+  const accessToken = useSelector((state) => state.auth.accessToken);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const signIn = async (provider, formData) => {
-    console.log('accessToken', accessToken)
+    console.log("accessToken", accessToken);
     const loginCredentials = {
       email: formData.get("email"),
       password: formData.get("password"),
     };
     console.log("loginCredentials", loginCredentials);
-    const result = await dispatch(requestLogin(loginCredentials))
-    if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/')
+    const result = await dispatch(requestLogin(loginCredentials));
+    if (result.meta.requestStatus === "fulfilled") {
+      navigate("/");
     }
   };
   useEffect(() => {
-    if(!isTokenExpired(accessToken)) {
-      navigate('/')
+    if (!isTokenExpired(accessToken)) {
+      navigate("/");
     }
-  }, [accessToken])
+  }, [accessToken]);
+  // const demoFunction = () => {
+  //   alert('Hello world');
+  // }
+  function demoFunction() {
+    return alert("Hello world");
+  }
+
   return (
     // preview-start
+
     <AppProvider theme={theme}>
+      <button type="button" onClick={demoFunction}>
+        demo
+      </button>
       <SignInPage
         signIn={signIn}
         providers={providers}
         slotProps={{ emailField: { autoFocus: true } }}
-        // to use this parts simply uncomment the #slots property
-        // slots={{signUpLink: SignUpLink}}
       />
     </AppProvider>
     // preview-end

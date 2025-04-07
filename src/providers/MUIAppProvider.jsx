@@ -3,6 +3,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ReactRouterAppProvider } from "@toolpad/core/react-router";
 import { Outlet } from "react-router";
+import { useState } from "react";
 
 const NAVIGATION = [
   {
@@ -29,9 +30,39 @@ const BRANDING = {
   title: "Rahmatullah",
 };
 
+
 export default function MUIAppProvider() {
+  const [session, setSession] = useState({
+    user: {
+      name: "Bharat Kashyap",
+      email: "bharatkashyap@outlook.com",
+      image: "https://avatars.githubusercontent.com/u/19550456",
+    },
+  });
+  const authentication = React.useMemo(() => {
+    return {
+      signIn: () => {
+        setSession({
+          user: {
+            name: "Bharat Kashyap",
+            email: "bharatkashyap@outlook.com",
+            image: "https://avatars.githubusercontent.com/u/19550456",
+          },
+        });
+      },
+      signOut: () => {
+        setSession(null);
+      },
+    };
+  }, []);
+
   return (
-    <ReactRouterAppProvider navigation={NAVIGATION} branding={BRANDING}>
+    <ReactRouterAppProvider
+      session={session}
+      authentication={authentication}
+      navigation={NAVIGATION}
+      branding={BRANDING}
+    >
       <Outlet />
     </ReactRouterAppProvider>
   );

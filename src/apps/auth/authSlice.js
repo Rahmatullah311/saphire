@@ -35,6 +35,12 @@ export const requestLogin = createAsyncThunk(
     }
   }
 );
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  dispatch(authSlice.actions.logout());
+};
+
 
 export const requestRegister = createAsyncThunk(
   "auth/register",
@@ -118,7 +124,14 @@ export const initialState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.isAuthenticated = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(requestLogin.pending, (state) => {
@@ -133,7 +146,6 @@ export const authSlice = createSlice({
       })
       .addCase(requestLogin.rejected, (state, action) => {
         state.isLoading = false;
-        toast.error(action.payload)
         console.log('action.payload', action.payload)
       })
       .addCase(requestRegister.pending, (state) => {

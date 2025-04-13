@@ -36,10 +36,38 @@ export const requestLogin = createAsyncThunk(
   }
 );
 export const logout = () => (dispatch) => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
+
+  localStorage.removeItem("tokenshieldAccessToken");
+  localStorage.removeItem("tokenshieldRefreshToken");
   dispatch(authSlice.actions.logout());
 };
+
+
+export const requestLogout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${apiEndpoint}api/tokenshield/token/block/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          refresh: localStorage.getItem("tokenshieldRefreshToken"),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+      return null;
+    }
+    catch (error) {
+      console.log("error", error);
+      return rejectWithValue(error);
+    }
+  }
+)
+
 
 
 export const requestRegister = createAsyncThunk(
@@ -115,10 +143,14 @@ export const refreshToken = createAsyncThunk(
 
 const tokenshieldAccessToken = localStorage.getItem("tokenshieldAccessToken");
 const tokenshieldRefreshToken = localStorage.getItem("tokenshieldRefreshToken");
+const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {};
 export const initialState = {
   isLoading: false,
   accessToken: tokenshieldAccessToken ? tokenshieldAccessToken : "",
   refreshToken: tokenshieldRefreshToken ? tokenshieldRefreshToken : "",
+  user: user,
+  isAuthenticated: !!tokenshieldAccessToken,
+  error: null,
 };
 
 export const authSlice = createSlice({
@@ -139,11 +171,13 @@ export const authSlice = createSlice({
       })
       .addCase(requestLogin.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.accessToken = action.payload.access;
-        state.refreshToken = action.payload.refresh;
-        localStorage.setItem("tokenshieldRefreshToken", action.payload.refresh);
-        localStorage.setItem("tokenshieldAccessToken", action.payload.access);
-      })
+        state.accessToken = action.payload.tokens.access;
+        state.refreshToken = action.payload.tokens.refresh;
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+        localStorage.setItem("tokenshieldRefreshToken", action.payload.tokens.refresh);
+        localStorage.setItem("tokenshieldAccessToken", action.payload.tokens.access);
+        localStorage.setItem("user", JSON.stringify(action.payload.user));})
       .addCase(requestLogin.rejected, (state, action) => {
         state.isLoading = false;
         console.log('action.payload', action.payload)
@@ -174,7 +208,20 @@ export const authSlice = createSlice({
       .addCase(refreshToken.rejected, (state) => {
         console.log("token refresh request rejected");
         state.isLoading = false;
-      });
+      })
+      .addCase(requestLogout.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(requestLogout.fulfilled, (state) => {
+        state.isLoading = false;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.user = null;
+        localStorage.removeItem("tokenshieldAccessToken");
+        localStorage.removeItem("tokenshieldRefreshToken");
+        localStorage.removeItem("user");
+        toast.success("Logout successful");
+      })
   },
 });
 

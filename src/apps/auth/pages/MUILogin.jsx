@@ -41,20 +41,10 @@ export default function MUILogin() {
       navigate("/");
     }
   }, [accessToken]);
-  // const demoFunction = () => {
-  //   alert('Hello world');
-  // }
-  function demoFunction() {
-    return alert("Hello world");
-  }
-
   return (
     // preview-start
 
     <AppProvider theme={theme}>
-      <button type="button" onClick={demoFunction}>
-        demo
-      </button>
       <SignInPage
         signIn={signIn}
         providers={providers}

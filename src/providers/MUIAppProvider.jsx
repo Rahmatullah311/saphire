@@ -4,6 +4,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ReactRouterAppProvider } from "@toolpad/core/react-router";
 import { Outlet } from "react-router";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { requestLogout } from "../apps/auth/authSlice";
 
 const NAVIGATION = [
   {
@@ -32,6 +34,9 @@ const BRANDING = {
 
 
 export default function MUIAppProvider() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user)
+
   const [session, setSession] = useState({
     user: {
       name: "Bharat Kashyap",
@@ -39,6 +44,21 @@ export default function MUIAppProvider() {
       image: "https://avatars.githubusercontent.com/u/19550456",
     },
   });
+  React.useEffect(() => {
+    console.log("user", user);
+    if (user) {
+      setSession({
+        user: {
+          name: user.fullname,
+          email: user.email,
+          image: user.image,
+        },
+      });
+    } else {
+      setSession(null);
+    }
+  }, [user])
+
   const authentication = React.useMemo(() => {
     return {
       signIn: () => {
@@ -51,6 +71,7 @@ export default function MUIAppProvider() {
         });
       },
       signOut: () => {
+        dispatch(requestLogout());
         setSession(null);
       },
     };

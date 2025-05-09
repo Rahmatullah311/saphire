@@ -1,11 +1,19 @@
 import * as React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { ReactRouterAppProvider } from "@toolpad/core/react-router";
 import { Outlet } from "react-router";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { requestLogout } from "../apps/auth/authSlice";
+import { StoreMallDirectoryOutlined } from "@mui/icons-material";
+import AddOutlined from '@mui/icons-material/AddOutlined'
+import ListOutlined from '@mui/icons-material/ListOutlined'
+import CategoryOutlined from '@mui/icons-material/CategoryOutlined'
+import BrandingWatermarkOutlined from '@mui/icons-material/BrandingWatermarkOutlined'
+
 
 const NAVIGATION = [
   {
@@ -19,12 +27,78 @@ const NAVIGATION = [
   {
     segment: "account",
     title: "Account",
-    icon: <ShoppingCartIcon />,
+    icon: <ManageAccountsOutlinedIcon />,
   },
   {
     segment: "orders",
     title: "Orders",
-    icon: <ShoppingCartIcon />,
+    icon: <ListAltOutlinedIcon />,
+  },
+  {
+    segment: "products",
+    title: "Products",
+    icon: <StoreMallDirectoryOutlined />,
+    children: [
+      {
+        segment: 'list',
+        title: 'Products List',
+        icon: <ListOutlined />
+      },
+      {
+        segment: 'new',
+        title: 'New Product',
+        icon: <AddOutlined />
+      },
+      {
+        segment: 'categories',
+        title: 'Product Categories',
+        icon: <CategoryOutlined />,
+        children: [
+          {
+            segment: 'list',
+            title: 'Product Categories List',
+            icon: <ListOutlined />
+          },
+          {
+            segment: 'new',
+            title: 'New Product Category',
+            icon: <AddOutlined />
+          },
+        ]
+      },
+      {
+        segment: 'brands',
+        title: 'Product Brands',
+        icon: <BrandingWatermarkOutlined />,
+        children: [
+          {
+            segment: 'list',
+            title: 'Product Brands List',
+            icon: <ListOutlined />
+          },
+          {
+            segment: 'new',
+            title: 'New Product Brand',
+            icon: <AddOutlined />
+          },
+        ]
+      },
+    ]
+  },
+  {
+    segment: "settings",
+    title: "Settings",
+    icon: <SettingsOutlinedIcon />,
+    children: [
+      {
+        title: "General",
+        icon: <SettingsOutlinedIcon />,
+      },
+      {
+        title: "Security",
+        icon: <SettingsOutlinedIcon />,
+      },
+    ],
   },
 ];
 

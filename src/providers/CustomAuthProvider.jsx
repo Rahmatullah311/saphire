@@ -34,8 +34,6 @@ const CustomAuthProvider = () => {
     navigate("/auth/login");
     return null;
   }
-
-  return <Outlet />;
 };
 
 export default CustomAuthProvider;

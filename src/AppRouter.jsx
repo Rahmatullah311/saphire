@@ -6,12 +6,15 @@ import MUIDashboardLayout from "./layouts/MUIDashboardLayout";
 import AccountRoutes from "./apps/account/AccountRoutes";
 import OrderRoutes from "./apps/orders/OrderRoutes";
 import { AuthRoutes } from "./apps/auth/AuthRoutes";
+import ProductRoutes from "./apps/products/ProductRoutes";
+import { ToastContainer } from "react-toastify";
 
 const Providers = () => {
   return (
     <React.Fragment>
       <MUIAppProvider />
       <CustomAuthProvider />
+      <ToastContainer />
     </React.Fragment>
   );
 };
@@ -24,7 +27,7 @@ const AppRouter = createBrowserRouter([
       {
         path: "/",
         element: <MUIDashboardLayout />,
-        children: [...AccountRoutes, ...OrderRoutes],
+        children: [...AccountRoutes, ...OrderRoutes, ...ProductRoutes],
       },
     ],
   },

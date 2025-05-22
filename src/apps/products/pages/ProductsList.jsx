@@ -1,29 +1,17 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { getProducts } from '../productSlice'
-import TableSkeleton from '../../../skeleton/TableSkeleton'
-// const TableSkeleton = React.lazy(() => import('../../../skeleton/TableSkeleton'))
-const ProductsList = () => {
-  const dispatch = useDispatch()
-  const data = useSelector((state) => state.product.data)
-  const error = useSelector((state) => state.product.error)
-  const isLoading = useSelector((state) => state.product.isLoading)
+import React from "react";
+import { useGetProductsQuery } from "../productSlice";
+const TableSkeleton = React.lazy(
+  () => import("../../../skeleton/TableSkeleton")
+);
+const ProductsTable = React.lazy(() => import ('../components/ProductsTable'))
 
-  useEffect(() => {
-    dispatch(getProducts())
-  }, [dispatch])
+const ProductsList = () => {
+  const { data, isLoading, isError, error } = useGetProductsQuery();
   return (
     <div>
-    {
-      isLoading ? (
-        <TableSkeleton />
-      ):(
-      <p>this is is the products list page</p>
-      )
-    }
+      {isLoading ? <TableSkeleton /> : <ProductsTable/>}
     </div>
-  )
-}
+  );
+};
 
-export default ProductsList
+export default ProductsList;

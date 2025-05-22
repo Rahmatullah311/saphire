@@ -13,7 +13,7 @@ const TableSkeleton = ({
   return (
     <div className={`w-full ${className}`}>
       {/* Top Action Buttons */}
-      <Stack direction="row" spacing={2} sx={{ marginBottom: 2 }}>
+      <Stack direction="row" spacing={2} sx={{ marginBottom: 2, marginTop: 2, }}>
         {[...Array(topButtonCount)].map((_, index) => (
           <Skeleton key={index} variant="rectangular" width={80} height={36} />
         ))}
